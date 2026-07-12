@@ -8,8 +8,15 @@
         body { font-family: system-ui, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
         .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 100%; max-width: 500px; text-align: center; margin-bottom: 20px; box-sizing: border-box; }
         input, select, button { display: block; width: 100%; margin: 10px 0; padding: 12px; border: 1px solid #ced4da; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
-        button { background: #007bff; color: white; cursor: pointer; border: none; font-weight: bold; }
+        
+        /* NAVIGATION BAR BUTTONS FIX */
+        .nav-links { display: flex; justify-content: space-around; width: 100%; max-width: 500px; margin-bottom: 20px; background: white; padding: 10px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+        .nav-links button { display: inline-block; width: 30%; background: #e9ecef; color: #007bff; border: none; font-size: 14px; padding: 10px; cursor: pointer; font-weight: bold; margin: 0; }
+        .nav-links button:hover { background: #007bff; color: white; }
+        
+        button { background: #007bff; color: white; cursor: pointer; border: none; font-weight: bold; -webkit-user-select: none; user-select: none; }
         button:hover { background: #0056b3; }
+        
         .choice-btn { background: #fff; color: #333; border: 1px solid #ced4da; }
         .choice-btn:hover { background: #e9ecef; }
         .correct { background: #d4edda !important; color: #155724; }
@@ -18,16 +25,17 @@
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th, td { padding: 10px; border-bottom: 1px solid #dee2e6; text-align: left; }
         th { background: #e9ecef; }
-        .nav-links { margin-bottom: 15px; font-size: 14px; }
-        .nav-links a { color: #007bff; margin: 0 10px; text-decoration: none; cursor: pointer; }
+        
+        /* PREVENT CHROME TEXT HIGHLIGHTING GLITCH */
+        h2, h3, p, th, td, div { -webkit-user-select: none; user-select: none; }
     </style>
 </head>
 <body>
 
     <div class="nav-links">
-        <a onclick="showView('student-login-view')">Play Game</a> | 
-        <a onclick="showView('leaderboard-view')">Public Leaderboard</a> | 
-        <a onclick="showView('creator-view')">Creator Dashboard</a>
+        <button onclick="showView('student-login-view')">Play Game</button>
+        <button onclick="showView('leaderboard-view')">Leaderboard</button>
+        <button onclick="showView('creator-view')">Dashboard</button>
     </div>
 
     <!-- STUDENT LOGIN VIEW -->
@@ -86,10 +94,7 @@
     </div>
 
     <script>
-        // Paste your unique Google Web App URL link inside the quotes below:
         const API_URL = "https://google.com"; 
-        
-        // Type whatever private admin login password you want between the quotes below:
         const CREATOR_PASSWORD = "admin";
 
         let currentQ = null;
@@ -195,13 +200,3 @@
         }
 
         function verifyCreator() {
-            if (document.getElementById('creator-pass').value === CREATOR_PASSWORD) {
-                document.getElementById('creator-form').classList.remove('hidden');
-            } else {
-                alert("Incorrect Password!");
-            }
-        }
-
-        async function addQuestionToServer() {
-            const payload = {
-                action: "addQuestion",
