@@ -94,7 +94,7 @@
     </div>
 
     <script>
-        const API_URL = "https://google.com"; 
+        const API_URL = "https://script.google.com/macros/s/AKfycbyCKnePuDAenmfgEWK9DHaOJqgHApe6HgZplb6aeQ1T85PEbQ-LTVDhj3PuCaqY18_8Og/exec"; 
         const CREATOR_PASSWORD = "admin";
 
         let currentQ = null;
