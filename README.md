@@ -86,8 +86,12 @@
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbyCKnePuDAenmfgEWK9DHaOJqgHApe6HgZplb6aeQ1T85PEbQ-LTVDhj3PuCaqY18_8Og/exec"; 
+        // Paste your unique Google Web App URL link inside the quotes below:
+        const API_URL = "https://google.com"; 
         
+        // Type whatever private admin login password you want between the quotes below:
+        const CREATOR_PASSWORD = "admin";
+
         let currentQ = null;
         let student = { name: "", grade: "", section: "" };
         let attempted = JSON.parse(localStorage.getItem('attempted_questions') || '[]');
@@ -133,21 +137,25 @@
             document.getElementById('message').innerText = "";
             document.querySelectorAll('.choice-btn').forEach(b => { b.disabled = false; b.className = "choice-btn"; });
 
-            const response = await fetch(API_URL);
-            const questions = await response.json();
-            const available = questions.filter(q => q.status === 'open' && !attempted.includes(String(q.id)));
+            try {
+                const response = await fetch(API_URL);
+                const questions = await response.json();
+                const available = questions.filter(q => q.status === 'open' && !attempted.includes(String(q.id)));
 
-            if (available.length === 0) {
-                document.getElementById('question-box').innerHTML = `<h3>🎉 All Caught Up!</h3><p>No new questions available for you right now.</p>`;
-                return;
+                if (available.length === 0) {
+                    document.getElementById('question-box').innerHTML = `<h3>🎉 All Caught Up!</h3><p>No new questions available for you right now.</p>`;
+                    return;
+                }
+
+                currentQ = available[Math.floor(Math.random() * available.length)];
+                document.getElementById('q-text').innerText = currentQ.question;
+                document.getElementById('btnA').innerText = `A) ${currentQ.a}`;
+                document.getElementById('btnB').innerText = `B) ${currentQ.b}`;
+                document.getElementById('btnC').innerText = `C) ${currentQ.c}`;
+                document.getElementById('btnD').innerText = `D) ${currentQ.d}`;
+            } catch(e) {
+                document.getElementById('q-text').innerText = "Database connection error. Check your Google Sheet tabs.";
             }
-
-            currentQ = available[Math.floor(Math.random() * available.length)];
-            document.getElementById('q-text').innerText = currentQ.question;
-            document.getElementById('btnA').innerText = `A) ${currentQ.a}`;
-            document.getElementById('btnB').innerText = `B) ${currentQ.b}`;
-            document.getElementById('btnC').innerText = `C) ${currentQ.c}`;
-            document.getElementById('btnD').innerText = `D) ${currentQ.d}`;
         }
 
         async function submitAnswer(reply, btn) {
@@ -172,41 +180,28 @@
         }
 
         async function loadLeaderboard() {
-            const res = await fetch(`${API_URL}?type=leaderboard`);
-            const data = await res.json();
-            data.sort((a,b) => b.stars - a.stars);
-            
-            const tbody = document.getElementById('leaderboard-data');
-            tbody.innerHTML = data.map((user, idx) => `
-                <tr><td>${idx+1}</td><td>${user.name}</td><td>${user.grade} - ${user.section}</td><td>⭐ ${user.stars}</td></tr>
-            `).join('');
+            try {
+                const res = await fetch(`${API_URL}?type=leaderboard`);
+                const data = await res.json();
+                data.sort((a,b) => b.stars - a.stars);
+                
+                const tbody = document.getElementById('leaderboard-data');
+                tbody.innerHTML = data.map((user, idx) => `
+                    <tr><td>${idx+1}</td><td>${user.name}</td><td>${user.grade} - ${user.section}</td><td>⭐ ${user.stars}</td></tr>
+                `).join('');
+            } catch(e) {
+                document.getElementById('leaderboard-data').innerHTML = "<tr><td colspan='4'>Failed to load scores.</td></tr>";
+            }
         }
 
         function verifyCreator() {
-            if (document.getElementById('MIguEL').value === "MIguEL”) {
-                document.getElementById('MIguEL').classList.remove('hidden');
+            if (document.getElementById('creator-pass').value === CREATOR_PASSWORD) {
+                document.getElementById('creator-form').classList.remove('hidden');
             } else {
-                alert("MIguEL");
+                alert("Incorrect Password!");
             }
         }
 
         async function addQuestionToServer() {
             const payload = {
                 action: "addQuestion",
-                question: document.getElementById('new-q').value,
-                a: document.getElementById('new-a').value,
-                b: document.getElementById('new-b').value,
-                c: document.getElementById('new-c').value,
-                d: document.getElementById('new-d').value,
-                correct: document.getElementById('new-correct').value
-            };
-            if(!payload.question || !payload.correct) return alert("Fill out the form!");
-            
-            await fetch(API_URL, { method: "POST", body: JSON.stringify(payload) });
-            alert("Question pushed successfully into the shuffle pool!");
-            document.querySelectorAll('#creator-form input').forEach(i => i.value = "");
-        }
-    </script>
-</body>
-</html>
-
