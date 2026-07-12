@@ -183,10 +183,10 @@
         }
 
         function verifyCreator() {
-            if (document.getElementById('creator-pass').value === "MIguEL”) {
-                document.getElementById('creator-form').classList.remove('hidden');
+            if (document.getElementById('MIguEL').value === "MIguEL”) {
+                document.getElementById('MIguEL').classList.remove('hidden');
             } else {
-                alert("Incorrect Password!");
+                alert("MIguEL");
             }
         }
 
