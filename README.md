@@ -86,7 +86,7 @@
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbxZ2LlxUfN_6QzbCHWrOf4AyyEnOVVL5Fbiutkeh47ZUZ9ujsmq1Ih1hxW_oKs83IwpFQ/exec"; 
+        const API_URL = "https://script.google.com/macros/s/AKfycbyCKnePuDAenmfgEWK9DHaOJqgHApe6HgZplb6aeQ1T85PEbQ-LTVDhj3PuCaqY18_8Og/exec"; 
         
         let currentQ = null;
         let student = { name: "", grade: "", section: "" };
